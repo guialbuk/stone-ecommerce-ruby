@@ -2,12 +2,7 @@
 
 ### Stone Gem Download
 
-Download the gem from [releases](https://github.com/stone-pagamentos/stone-ecommerce-ruby/releases) and run the following command:
-```ruby
-$ gem install stone_ecommerce-#{version_of_release}
-```
-<!--
-https://rubygems.org/gems/
+https://rubygems.org/gems/stone_ecommerce
 
 ```ruby
 $ gem install stone_ecommerce
@@ -16,7 +11,6 @@ $ gem install stone_ecommerce
 ```ruby
 require 'stone_ecommerce'
 ```
--->
 
 Ruby DevKit is required.
 
