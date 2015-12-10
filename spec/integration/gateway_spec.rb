@@ -309,6 +309,41 @@ RSpec.describe Gateway do
 
   end
 
+  it 'should do a retry method with only order key' do
+    createSaleRequest = CreateSaleRequest.new
+    creditCardTransactionItem = CreditCardTransaction.new
+    creditCardTransactionItem.AmountInCents = 100
+    creditCardTransactionItem.CreditCard.CreditCardBrand = 'Visa'
+    creditCardTransactionItem.CreditCard.CreditCardNumber = '41111111111111'
+    creditCardTransactionItem.CreditCard.ExpMonth = 10
+    creditCardTransactionItem.CreditCard.ExpYear = 22
+    creditCardTransactionItem.CreditCard.HolderName = 'Maria do Carmo'
+    creditCardTransactionItem.CreditCard.SecurityCode = '123'
+    creditCardTransactionItem.CreditCardOperation = 'AuthAndCapture'
+    creditCardTransactionItem.TransactionReference = 'RubySDK-RetryTest'
+
+    createSaleRequest.CreditCardTransactionCollection << creditCardTransactionItem
+    createSaleRequest.Order.OrderReference = 'RubySDK-RetryTest'
+
+    # cria o pedido que sera usado para retentativa
+    responseCreate = gateway.CreateSale(createSaleRequest)
+
+    # pega o orderkey e o transaction key da resposta que sao necessarios para fazer a retentativa
+    orderKey = responseCreate["OrderResult"]["OrderKey"]
+    transactionKey = responseCreate['CreditCardTransactionResultCollection'][0]['TransactionKey']
+
+    retrySaleRequest = RetrySaleRequest.new
+
+    # monta o objeto de retentativa
+    retrySaleRequest.OrderKey = orderKey
+
+    # faz a requisicao de retentativa
+    response = gateway.Retry(retrySaleRequest)
+
+    expect(response['ErrorReport']).to eq nil
+
+  end
+
   it 'should cancel a transaction' do
     createSaleRequest = CreateSaleRequest.new
     creditCardTransactionItem = CreditCardTransaction.new

@@ -2,7 +2,7 @@ Gem::Specification.new do |s|
   s.name = 'stone_ecommerce'
   s.summary = 'Stone Ruby Client Library'
   s.description = 'Ruby library for integrating with the Stone payment web services.'
-  s.version = '1.0.0' # Major.Minor.Revision
+  s.version = '1.0.2' # Major.Minor.Revision
   s.author = 'Stone Pagamentos'
   s.email = 'meajuda@stone.com.br'
   s.homepage = 'http://stone.com.br/'

@@ -230,14 +230,13 @@ class Gateway
         retrySaleRequest.RetrySaleCreditCardTransactionCollection.each do |retrySale|
           r = retrySale.to_json
           saleHash['RetrySaleCreditCardTransactionCollection'] << r
-
-          if retrySaleRequest.Options.to_json.any?
-            retry_options = retrySaleRequest.Options.to_json
-            saleHash['Options'] = retry_options
-          else
-            saleHash['Options'] = nil
-          end
         end
+      end
+      if retrySaleRequest.Options.to_json.any?
+        retry_options = retrySaleRequest.Options.to_json
+        saleHash['Options'] = retry_options
+      else
+        saleHash['Options'] = nil
       end
     rescue Exception => e
       return e.message
