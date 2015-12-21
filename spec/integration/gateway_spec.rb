@@ -1,7 +1,7 @@
 require_relative '../../lib/stone_ecommerce'
 require_relative 'test_helper'
 
-merchant_key = '8A2DD57F-1ED9-4153-B4CE-69683EFADAD5'
+merchant_key = 'merchant_key'
 gateway = Gateway.new(:production, merchant_key)
 
 RSpec.describe Gateway do
