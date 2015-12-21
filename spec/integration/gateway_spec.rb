@@ -1,7 +1,7 @@
 require_relative '../../lib/stone_ecommerce'
 require_relative 'test_helper'
 
-merchant_key = 'merchant_key'
+merchant_key = '8A2DD57F-1ED9-4153-B4CE-69683EFADAD5'
 gateway = Gateway.new(:production, merchant_key)
 
 RSpec.describe Gateway do
@@ -83,131 +83,213 @@ RSpec.describe Gateway do
   end
 
   it 'should create a sale with all types of transactions and all fields filled' do
-    buyerAddressItem = BuyerAddress.new
-    buyerAddressItem.AddressType = 'Comercial'
-    buyerAddressItem.City = 'Rio de Janeiro'
-    buyerAddressItem.Complement = '10 Andar'
-    buyerAddressItem.Country = 'Brazil'
-    buyerAddressItem.District = 'Centro'
-    buyerAddressItem.Number = '199'
-    buyerAddressItem.State = 'RJ'
-    buyerAddressItem.Street = 'Rua da Quitanda'
-    buyerAddressItem.ZipCode = '20091005'
+    # creates boleto transaction object
+    boletoTransaction = BoletoTransaction.new
 
-    boletoTransactionItem = BoletoTransaction.new
-    boletoTransactionItem.AmountInCents = 350
-    boletoTransactionItem.BankNumber = '237'
-    boletoTransactionItem.BillingAddress.City = 'Rio de Janeiro'
-    boletoTransactionItem.BillingAddress.Complement = '10º andar'
-    boletoTransactionItem.BillingAddress.Country = 'Brazil'
-    boletoTransactionItem.BillingAddress.District = 'Centro'
-    boletoTransactionItem.BillingAddress.Number = '199'
-    boletoTransactionItem.BillingAddress.State = 'RJ'
-    boletoTransactionItem.BillingAddress.Street = 'Rua da Quitanda'
-    boletoTransactionItem.BillingAddress.ZipCode = '20091005'
-    boletoTransactionItem.DocumentNumber = '12345678901'
-    boletoTransactionItem.Instructions = 'Pagar antes do vencimento'
-    boletoTransactionItem.Options.CurrencyIso = 'BRL'
-    boletoTransactionItem.Options.DaysToAddInBoletoExpirationDate = 7
-    boletoTransactionItem.TransactionDateInMerchant = Date.new(2014, 11, 5).strftime("%Y-%m-%dT%H:%M:%S")
-    boletoTransactionItem.TransactionReference = 'RubySDK-BoletoTransactionTest'
+    # 100 reais in cents
+    boletoTransaction.AmountInCents = 10000
+    boletoTransaction.BankNumber = '237'
+    boletoTransaction.BillingAddress.City = 'Tatooine'
+    boletoTransaction.BillingAddress.Complement = ''
+    boletoTransaction.BillingAddress.Country = 'Brazil'
+    boletoTransaction.BillingAddress.District = 'Mos Eisley'
+    boletoTransaction.BillingAddress.Number = '123'
+    boletoTransaction.BillingAddress.State = 'RJ'
+    boletoTransaction.BillingAddress.Street = 'Mos Eisley Cantina'
+    boletoTransaction.BillingAddress.ZipCode = '20001000'
+    boletoTransaction.DocumentNumber = '12345678901'
+    boletoTransaction.Instructions = 'Pagar antes do vencimento'
+    boletoTransaction.Options.CurrencyIso = 'BRL'
+    boletoTransaction.Options.DaysToAddInBoletoExpirationDate = 5
+    boletoTransaction.TransactionReference = 'NumeroDaTransacao'
 
-    creditCardTransactionItem = CreditCardTransaction.new
-    creditCardTransactionItem.AmountInCents = 750
-    creditCardTransactionItem.CreditCardOperation = 'AuthAndCapture'
-    creditCardTransactionItem.InstallmentCount = 1
-    creditCardTransactionItem.TransactionDateInMerchant = Date.new(2014, 11, 5).strftime("%Y-%m-%dT%H:%M:%S")
-    creditCardTransactionItem.TransactionReference = 'RubySDK-CreditCardTransactionTest'
-    creditCardTransactionItem.Options.CaptureDelayInMinutes = 0
-    creditCardTransactionItem.Options.CurrencyIso = 'BRL'
-    creditCardTransactionItem.Options.ExtendedLimitCode = nil
-    creditCardTransactionItem.Options.ExtendedLimitEnabled = false
-    creditCardTransactionItem.Options.IataAmountInCents = 0
-    creditCardTransactionItem.Options.InterestRate = 0
-    creditCardTransactionItem.Options.MerchantCategoryCode = nil
-    creditCardTransactionItem.Options.PaymentMethodCode = 1
-    creditCardTransactionItem.Options.SoftDescriptorText = 'Nome da Loja'
-    creditCardTransactionItem.Recurrency.DateToStartBilling = (Date.parse(Time.now.to_s)).strftime("%Y-%m-%dT%H:%M:%S")
-    creditCardTransactionItem.Recurrency.Frequency = 'Monthly'
-    creditCardTransactionItem.Recurrency.Interval = 1
-    creditCardTransactionItem.Recurrency.OneDollarAuth = false
-    creditCardTransactionItem.Recurrency.Recurrences = 2
-    creditCardTransactionItem.CreditCard.BillingAddress.City = 'Rio de Janeiro'
-    creditCardTransactionItem.CreditCard.BillingAddress.Complement = '10º andar'
-    creditCardTransactionItem.CreditCard.BillingAddress.Country = 'Brazil'
-    creditCardTransactionItem.CreditCard.BillingAddress.District = 'Centro'
-    creditCardTransactionItem.CreditCard.BillingAddress.Number = '199'
-    creditCardTransactionItem.CreditCard.BillingAddress.State = 'RJ'
-    creditCardTransactionItem.CreditCard.BillingAddress.Street = 'Ruda da Quitanda'
-    creditCardTransactionItem.CreditCard.BillingAddress.ZipCode = '20091005'
-    creditCardTransactionItem.CreditCard.CreditCardBrand = 'Visa'
-    creditCardTransactionItem.CreditCard.CreditCardNumber = '4111111111111111'
-    creditCardTransactionItem.CreditCard.ExpMonth = 10
-    creditCardTransactionItem.CreditCard.ExpYear = 19
-    creditCardTransactionItem.CreditCard.HolderName = 'Maria do Carmo'
-    creditCardTransactionItem.CreditCard.InstantBuyKey = '00000000-0000-0000-0000-000000000000'
-    creditCardTransactionItem.CreditCard.SecurityCode = '123'
+
+    # create credit card transaction object
+    creditCardTransaction = CreditCardTransaction.new
+
+    # 100 reais in cents
+    creditCardTransaction.AmountInCents = 10000
+    creditCardTransaction.CreditCard.BillingAddress.City = 'Tatooine'
+    creditCardTransaction.CreditCard.BillingAddress.Complement = ''
+    creditCardTransaction.CreditCard.BillingAddress.Country = 'Brazil'
+    creditCardTransaction.CreditCard.BillingAddress.District = 'Mos Eisley'
+    creditCardTransaction.CreditCard.BillingAddress.Number = '123'
+    creditCardTransaction.CreditCard.BillingAddress.State = 'RJ'
+    creditCardTransaction.CreditCard.BillingAddress.Street = 'Mos Eisley Cantina'
+    creditCardTransaction.CreditCard.BillingAddress.ZipCode = '20001000'
+    creditCardTransaction.CreditCard.CreditCardBrand = 'Visa'
+    creditCardTransaction.CreditCard.CreditCardNumber = '4111111111111111'
+    creditCardTransaction.CreditCard.ExpMonth = 10
+    creditCardTransaction.CreditCard.ExpYear = 22
+    creditCardTransaction.CreditCard.HolderName = 'LUKE SKYWALKER'
+    creditCardTransaction.CreditCard.SecurityCode = '123'
+    creditCardTransaction.CreditCardOperation = 'AuthOnly'
+    creditCardTransaction.InstallmentCount = 1
+    creditCardTransaction.Options.CurrencyIso = 'BRL'
+    creditCardTransaction.Options.PaymentMethodCode = 1
+    creditCardTransaction.Options.SoftDescriptorText = 'Jedi Mega Store'
 
     shoppingCartItem = ShoppingCartItemCollection.new
-    shoppingCartItem.Description = 'Descricao do Produto'
-    shoppingCartItem.DiscountAmountInCents = 120
-    shoppingCartItem.ItemReference = 'product#666'
-    shoppingCartItem.Name = 'Nome do produto'
+    shoppingCartItem.Description = 'Red Lightsaber'
+    shoppingCartItem.DiscountAmountInCents = 0
+    shoppingCartItem.ItemReference = 'NumeroDoProduto'
+    shoppingCartItem.Name = 'Lightsaber'
     shoppingCartItem.Quantity = 1
-    shoppingCartItem.TotalCostInCents = 1100
-    shoppingCartItem.UnitCostInCents = 1220
+    shoppingCartItem.TotalCostInCents = 18000
+    shoppingCartItem.UnitCostInCents = 18000
 
-    shoppingCartCollectionItem = ShoppingCartCollection.new
-    shoppingCartCollectionItem.DeliveryAddress.City = 'Rio de Janeiro'
-    shoppingCartCollectionItem.DeliveryAddress.Complement = '10º andar'
-    shoppingCartCollectionItem.DeliveryAddress.Country = 'Brazil'
-    shoppingCartCollectionItem.DeliveryAddress.District = 'Centro'
-    shoppingCartCollectionItem.DeliveryAddress.Number = '199'
-    shoppingCartCollectionItem.DeliveryAddress.State = 'RJ'
-    shoppingCartCollectionItem.DeliveryAddress.Street = 'Rua da Quitanda'
-    shoppingCartCollectionItem.DeliveryAddress.ZipCode = '20091005'
-    shoppingCartCollectionItem.DeliveryDeadline = Date.new(2014, 12, 5).strftime("%Y-%m-%dT%H:%M:%S")
-    shoppingCartCollectionItem.EstimatedDeliveryDate = Date.new(2014, 11, 25).strftime("%Y-%m-%dT%H:%M:%S")
-    shoppingCartCollectionItem.FreighCostInCents = 0
-    shoppingCartCollectionItem.ShippingCompany = 'Nome da empresa responsável pela entrega'
-    shoppingCartCollectionItem.ShoppingCartItemCollection << shoppingCartItem
+    shoppingCartCollection = ShoppingCartCollection.new
+    shoppingCartCollection.DeliveryAddress.City = 'Galaxy far far away'
+    shoppingCartCollection.DeliveryAddress.Complement = 'Bridge'
+    shoppingCartCollection.DeliveryAddress.Country = 'Brazil'
+    shoppingCartCollection.DeliveryAddress.District = 'Command Room'
+    shoppingCartCollection.DeliveryAddress.Number = '321'
+    shoppingCartCollection.DeliveryAddress.State = 'RJ'
+    shoppingCartCollection.DeliveryAddress.Street = 'Death Star'
+    shoppingCartCollection.DeliveryAddress.ZipCode = '10002000'
+    shoppingCartCollection.DeliveryDeadline = DateTime.new(2015, 12, 14, 18, 36, 45).strftime("%Y-%m-%dT%H:%M:%S")
+    shoppingCartCollection.EstimatedDeliveryDate = DateTime.new(2015, 12, 14, 18, 36, 45).strftime("%Y-%m-%dT%H:%M:%S")
+    shoppingCartCollection.FreighCostInCents = 2000
+    shoppingCartCollection.ShippingCompany = 'Empire'
+    shoppingCartCollection.ShoppingCartItemCollection << shoppingCartItem
 
+    # creates request object for transaction creation
     createSaleRequest = CreateSaleRequest.new
 
-    createSaleRequest.Buyer.AddressCollection = Array.new
+    # adds to the boleto transaction collection
+    createSaleRequest.BoletoTransactionCollection << boletoTransaction
 
-    createSaleRequest.Buyer.Birthdate = Date.new(1990, 3, 3).strftime("%Y-%m-%dT%H:%M:%S")
+    buyerAddress = BuyerAddress.new
+    buyerAddress.AddressType = 'Residential'
+    buyerAddress.City = 'Tatooine'
+    buyerAddress.Complement = ''
+    buyerAddress.Country = 'Brazil'
+    buyerAddress.District = 'Mos Eisley'
+    buyerAddress.Number = '123'
+    buyerAddress.State = 'RJ'
+    buyerAddress.Street = 'Mos Eisley Cantina'
+    buyerAddress.ZipCode = '20001000'
+
+    createSaleRequest.Buyer.AddressCollection << buyerAddress
+    createSaleRequest.Buyer.Birthdate = DateTime.new(1990,8,20,0,0,0).strftime("%Y-%m-%dT%H:%M:%S")
+    createSaleRequest.Buyer.BuyerCategory = 'Normal'
+    createSaleRequest.Buyer.BuyerReference = 'C3PO'
+    createSaleRequest.Buyer.CreateDateInMerchant = DateTime.new(2015,12,11,18,36,45).strftime("%Y-%m-%dT%H:%M:%S")
     createSaleRequest.Buyer.DocumentNumber = '12345678901'
     createSaleRequest.Buyer.DocumentType = 'CPF'
-    createSaleRequest.Buyer.Email = 'someone@example.com'
+    createSaleRequest.Buyer.Email = 'lskywalker@r2d2.com'
     createSaleRequest.Buyer.EmailType = 'Personal'
-    createSaleRequest.Buyer.FacebookId = ''
+    createSaleRequest.Buyer.FacebookId = 'lukeskywalker8917'
     createSaleRequest.Buyer.Gender = 'M'
-    createSaleRequest.Buyer.HomePhone = '2112345678'
-    createSaleRequest.Buyer.MobilePhone = '21987654321'
-    createSaleRequest.Buyer.Name = 'Someone'
+    createSaleRequest.Buyer.HomePhone = '(21)123456789'
+    createSaleRequest.Buyer.MobilePhone = '(21)987654321'
+    createSaleRequest.Buyer.Name = 'Luke Skywalker'
     createSaleRequest.Buyer.PersonType = 'Person'
-    createSaleRequest.Buyer.TwitterId = ''
-    createSaleRequest.Buyer.WorkPhone = '2178563412'
-    createSaleRequest.Buyer.BuyerCategory = 'Normal'
-    createSaleRequest.Buyer.BuyerKey = '00000000-0000-0000-0000-000000000000'
-    createSaleRequest.Buyer.BuyerReference = 'RubyBuyer#JohnConnor'
-    createSaleRequest.Buyer.CreateDateInMerchant = Date.new(2014, 4, 15).strftime("%Y-%m-%dT%H:%M:%S")
-    createSaleRequest.Buyer.LastBuyerUpdateInMerchant = Date.new(2014, 4, 15).strftime("%Y-%m-%dT%H:%M:%S")
-    createSaleRequest.Buyer.AddressCollection << buyerAddressItem
-    createSaleRequest.Merchant.MerchantReference = 'Nome da Loja'
+    createSaleRequest.Buyer.TwitterId = '@lukeskywalker8917'
+    createSaleRequest.Buyer.WorkPhone = '(21)28467902'
+
+    # adds to the credit card transaction collection
+    createSaleRequest.CreditCardTransactionCollection << creditCardTransaction
+    createSaleRequest.Merchant.MerchantReference = 'IdDaLojaPlataforma'
     createSaleRequest.Options.AntiFraudServiceCode = 0
     createSaleRequest.Options.CurrencyIso = 'BRL'
-    createSaleRequest.Options.IsAntiFraudEnabled = false
-    createSaleRequest.Options.Retries = 3
-    createSaleRequest.Order.OrderReference = 'RubySDK-TestOrder'
-    createSaleRequest.RequestData.EcommerceCategory = 'B2B'
+    createSaleRequest.Options.IsAntiFraudEnabled = true
+    createSaleRequest.Options.Retries = 1
+    createSaleRequest.Order.OrderReference = 'NumeroDoPedido'
+    createSaleRequest.RequestData.EcommerceCategory = 'B2C'
     createSaleRequest.RequestData.IpAddress = '127.0.0.1'
-    createSaleRequest.RequestData.Origin = ''
-    createSaleRequest.RequestData.SessionId = ''
-    createSaleRequest.BoletoTransactionCollection << boletoTransactionItem
-    createSaleRequest.CreditCardTransactionCollection << creditCardTransactionItem
+    createSaleRequest.RequestData.Origin = 'SiteDeCompra'
+    createSaleRequest.RequestData.SessionId = 'IdSesssaoNoSite'
 
+    # adds shopping cart collection in the request
+    createSaleRequest.ShoppingCartCollection << shoppingCartCollection
+
+    # make the request and returns a response hash
+    response = gateway.CreateSale(createSaleRequest)
+
+    expect(response[:ErrorReport]).to eq nil
+  end
+
+  it 'should create an anti fraud transaction' do
+    # create credit card transaction object
+    creditCardTransaction = CreditCardTransaction.new
+
+    # 100 reais in cents
+    creditCardTransaction.AmountInCents = 10000
+    creditCardTransaction.CreditCard.BillingAddress.City = 'Tatooine'
+    creditCardTransaction.CreditCard.BillingAddress.Complement = ''
+    creditCardTransaction.CreditCard.BillingAddress.Country = 'Brazil'
+    creditCardTransaction.CreditCard.BillingAddress.District = 'Mos Eisley'
+    creditCardTransaction.CreditCard.BillingAddress.Number = '123'
+    creditCardTransaction.CreditCard.BillingAddress.State = 'RJ'
+    creditCardTransaction.CreditCard.BillingAddress.Street = 'Mos Eisley Cantina'
+    creditCardTransaction.CreditCard.BillingAddress.ZipCode = '20001000'
+    creditCardTransaction.CreditCard.CreditCardBrand = 'Visa'
+    creditCardTransaction.CreditCard.CreditCardNumber = '4111111111111111'
+    creditCardTransaction.CreditCard.ExpMonth = 10
+    creditCardTransaction.CreditCard.ExpYear = 22
+    creditCardTransaction.CreditCard.HolderName = 'LUKE SKYWALKER'
+    creditCardTransaction.CreditCard.SecurityCode = '123'
+    creditCardTransaction.InstallmentCount = 1
+
+    shoppingCartItem = ShoppingCartItemCollection.new
+    shoppingCartItem.Description = 'Red Lightsaber'
+    shoppingCartItem.DiscountAmountInCents = 0
+    shoppingCartItem.ItemReference = 'NumeroDoProduto'
+    shoppingCartItem.Name = 'Lightsaber'
+    shoppingCartItem.Quantity = 1
+    shoppingCartItem.TotalCostInCents = 18000
+    shoppingCartItem.UnitCostInCents = 0
+
+    shoppingCartCollection = ShoppingCartCollection.new
+    shoppingCartCollection.DeliveryAddress.City = 'Galaxy far far away'
+    shoppingCartCollection.DeliveryAddress.Complement = 'Bridge'
+    shoppingCartCollection.DeliveryAddress.Country = 'Brazil'
+    shoppingCartCollection.DeliveryAddress.District = 'Command Room'
+    shoppingCartCollection.DeliveryAddress.Number = '321'
+    shoppingCartCollection.DeliveryAddress.State = 'RJ'
+    shoppingCartCollection.DeliveryAddress.Street = 'Death Star'
+    shoppingCartCollection.DeliveryAddress.ZipCode = '10002000'
+    shoppingCartCollection.FreighCostInCents = 2000
+    shoppingCartCollection.ShoppingCartItemCollection << shoppingCartItem
+
+    # creates request object for transaction creation
+    createSaleRequest = CreateSaleRequest.new
+
+    buyerAddress = BuyerAddress.new
+    buyerAddress.AddressType = 'Residential'
+    buyerAddress.City = 'Tatooine'
+    buyerAddress.Complement = ''
+    buyerAddress.Country = 'Brazil'
+    buyerAddress.District = 'Mos Eisley'
+    buyerAddress.Number = '123'
+    buyerAddress.State = 'RJ'
+    buyerAddress.Street = 'Mos Eisley Cantina'
+    buyerAddress.ZipCode = '20001000'
+
+    createSaleRequest.Buyer.AddressCollection << buyerAddress
+    createSaleRequest.Buyer.Birthdate = DateTime.new(1990,8,20,0,0,0).strftime("%Y-%m-%dT%H:%M:%S")
+    createSaleRequest.Buyer.BuyerReference = 'C3PO'
+    createSaleRequest.Buyer.DocumentNumber = '12345678901'
+    createSaleRequest.Buyer.DocumentType = 'CPF'
+    createSaleRequest.Buyer.Email = 'lskywalker@r2d2.com'
+    createSaleRequest.Buyer.EmailType = 'Personal'
+    createSaleRequest.Buyer.Gender = 'M'
+    createSaleRequest.Buyer.HomePhone = '(21)123456789'
+    createSaleRequest.Buyer.MobilePhone = '(21)987654321'
+    createSaleRequest.Buyer.Name = 'Luke Skywalker'
+    createSaleRequest.Buyer.PersonType = 'Person'
+    createSaleRequest.Buyer.WorkPhone = '(21)28467902'
+
+    # adds to the credit card transaction collection
+    createSaleRequest.CreditCardTransactionCollection << creditCardTransaction
+    createSaleRequest.Options.IsAntiFraudEnabled = true
+    createSaleRequest.Order.OrderReference = 'NumeroDoPedido'
+
+    # adds shopping cart collection in the request
+    createSaleRequest.ShoppingCartCollection << shoppingCartCollection
+
+    # make the request and returns a response hash
     response = gateway.CreateSale(createSaleRequest)
 
     expect(response[:ErrorReport]).to eq nil

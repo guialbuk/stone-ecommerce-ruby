@@ -142,9 +142,9 @@ class Gateway
           end
 
           if shoppingCart.ShoppingCartItemCollection.any?
-            shoppingCart.ShoppingCartItemCollection.each do |cartItem|
+            shoppingCart.ShoppingCartItemCollection.each_with_index do |cartItem, cartIndex|
               item = cartItem.to_json
-              saleHash['ShoppingCartCollection'][index]['ShoppingCartItemCollection'] << item
+              saleHash['ShoppingCartCollection'][index]['ShoppingCartItemCollection'][cartIndex] = item
             end
           else
             saleHash['ShoppingCartCollection'][index]['ShoppingCartItemCollection'] = nil
