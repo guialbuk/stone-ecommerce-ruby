@@ -1,30 +1,31 @@
-class CreditCard
+module Gateway
 
-  attr_accessor :InstantBuyKey
+  class CreditCard
 
-  attr_accessor :CreditCardNumber
+    attr_accessor :InstantBuyKey
 
-  attr_accessor :HolderName
+    attr_accessor :CreditCardNumber
 
-  attr_accessor :SecurityCode
+    attr_accessor :HolderName
 
-  attr_accessor :ExpMonth
+    attr_accessor :SecurityCode
 
-  attr_accessor :ExpYear
+    attr_accessor :ExpMonth
 
-  attr_accessor :CreditCardBrand
+    attr_accessor :ExpYear
 
-  attr_accessor :BillingAddress
+    attr_accessor :CreditCardBrand
 
-  def initialize
-    @BillingAddress = BillingAddress.new
+    attr_accessor :BillingAddress
+
+    def initialize
+      @BillingAddress = BillingAddress.new
+    end
+
+    def to_json
+      hash = {}
+      instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
+      hash
+    end
   end
-
-  def to_json
-    hash = {}
-    instance_variables.each {|var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
-    hash
-  end
-
-
 end

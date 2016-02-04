@@ -7,31 +7,20 @@ require 'nori'
 require 'rspec'
 require 'rexml/document'
 
-require_relative 'gateway/address'
-require_relative 'gateway/Address/billing_address'
-require_relative 'gateway/Address/buyer_address'
-require_relative 'gateway/Address/delivery_address'
-
-require_relative 'gateway/AntiFraud/anti_fraud_analysis_result'
-require_relative 'gateway/AntiFraud/query_sale_anti_fraud_analysis_data'
-require_relative 'gateway/AntiFraud/query_sale_anti_fraud_analysis_history_data'
-
 require_relative 'gateway/BoletoTransaction/boleto_transaction'
-require_relative 'gateway/BoletoTransaction/boleto_transaction_data'
 require_relative 'gateway/BoletoTransaction/boleto_transaction_options'
-require_relative 'gateway/BoletoTransaction/boleto_transaction_result'
 require_relative 'gateway/BoletoTransaction/boleto_transaction_report_file'
 
 require_relative 'gateway/CreditCardTransaction/credit_card'
 require_relative 'gateway/CreditCardTransaction/credit_card_transaction'
-require_relative 'gateway/CreditCardTransaction/credit_card_transaction_data'
 require_relative 'gateway/CreditCardTransaction/credit_card_transaction_options'
 require_relative 'gateway/CreditCardTransaction/manage_credit_card_transaction'
 require_relative 'gateway/CreditCardTransaction/retry_sale_credit_card_transaction'
 require_relative 'gateway/CreditCardTransaction/credit_card_transaction_report_file'
 
-require_relative 'gateway/InstantBuy/credit_card_data'
-require_relative 'gateway/InstantBuy/get_instant_buy_data_response'
+require_relative 'gateway/Address/billing_address'
+require_relative 'gateway/Address/buyer_address'
+require_relative 'gateway/Address/delivery_address'
 
 require_relative 'gateway/Merchant/merchant'
 

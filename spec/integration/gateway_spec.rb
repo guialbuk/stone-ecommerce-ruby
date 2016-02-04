@@ -2,13 +2,14 @@ require_relative '../../lib/stone_ecommerce'
 require_relative 'test_helper'
 
 merchant_key = 'merchant_key'
-gateway = Gateway.new(:production, merchant_key)
+
+gateway = Gateway::Gateway.new(:production, merchant_key)
 
 RSpec.describe Gateway do
   it 'should create a sale with boleto' do
-    createSaleRequest = CreateSaleRequest.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
 
-    boletoTransaction = BoletoTransaction.new
+    boletoTransaction = Gateway::BoletoTransaction.new
     boletoTransaction.AmountInCents = 100
     boletoTransaction.BankNumber = '237'
     boletoTransaction.DocumentNumber = '12345678901'
@@ -25,9 +26,9 @@ RSpec.describe Gateway do
   end
 
   it 'should create a sale with credit card' do
-    createSaleRequest = CreateSaleRequest.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
 
-    buyerAddress = BuyerAddress.new
+    buyerAddress = Gateway::BuyerAddress.new
     buyerAddress.AddressType = 'Residential'
     buyerAddress.City = 'Rio de Janeiro'
     buyerAddress.Complement = '10 Andar'
@@ -38,7 +39,7 @@ RSpec.describe Gateway do
     buyerAddress.Street = 'Rua da Quitanda'
     buyerAddress.ZipCode = '20091005'
 
-    creditCardTransaction = CreditCardTransaction.new
+    creditCardTransaction = Gateway::CreditCardTransaction.new
     creditCardTransaction.AmountInCents = 100
     creditCardTransaction.InstallmentCount = 1
     creditCardTransaction.TransactionReference = 'CreditCard One RubySDK Test'
@@ -84,7 +85,7 @@ RSpec.describe Gateway do
 
   it 'should create a sale with all types of transactions and all fields filled' do
     # creates boleto transaction object
-    boletoTransaction = BoletoTransaction.new
+    boletoTransaction = Gateway::BoletoTransaction.new
 
     # 100 reais in cents
     boletoTransaction.AmountInCents = 10000
@@ -105,7 +106,7 @@ RSpec.describe Gateway do
 
 
     # create credit card transaction object
-    creditCardTransaction = CreditCardTransaction.new
+    creditCardTransaction = Gateway::CreditCardTransaction.new
 
     # 100 reais in cents
     creditCardTransaction.AmountInCents = 10000
@@ -129,7 +130,7 @@ RSpec.describe Gateway do
     creditCardTransaction.Options.PaymentMethodCode = 1
     creditCardTransaction.Options.SoftDescriptorText = 'Jedi Mega Store'
 
-    shoppingCartItem = ShoppingCartItemCollection.new
+    shoppingCartItem = Gateway::ShoppingCartItemCollection.new
     shoppingCartItem.Description = 'Red Lightsaber'
     shoppingCartItem.DiscountAmountInCents = 0
     shoppingCartItem.ItemReference = 'NumeroDoProduto'
@@ -138,7 +139,7 @@ RSpec.describe Gateway do
     shoppingCartItem.TotalCostInCents = 18000
     shoppingCartItem.UnitCostInCents = 18000
 
-    shoppingCartCollection = ShoppingCartCollection.new
+    shoppingCartCollection = Gateway::ShoppingCartCollection.new
     shoppingCartCollection.DeliveryAddress.City = 'Galaxy far far away'
     shoppingCartCollection.DeliveryAddress.Complement = 'Bridge'
     shoppingCartCollection.DeliveryAddress.Country = 'Brazil'
@@ -154,12 +155,12 @@ RSpec.describe Gateway do
     shoppingCartCollection.ShoppingCartItemCollection << shoppingCartItem
 
     # creates request object for transaction creation
-    createSaleRequest = CreateSaleRequest.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
 
     # adds to the boleto transaction collection
     createSaleRequest.BoletoTransactionCollection << boletoTransaction
 
-    buyerAddress = BuyerAddress.new
+    buyerAddress = Gateway::BuyerAddress.new
     buyerAddress.AddressType = 'Residential'
     buyerAddress.City = 'Tatooine'
     buyerAddress.Complement = ''
@@ -212,7 +213,7 @@ RSpec.describe Gateway do
 
   it 'should create an anti fraud transaction' do
     # create credit card transaction object
-    creditCardTransaction = CreditCardTransaction.new
+    creditCardTransaction = Gateway::CreditCardTransaction.new
 
     # 100 reais in cents
     creditCardTransaction.AmountInCents = 10000
@@ -232,7 +233,7 @@ RSpec.describe Gateway do
     creditCardTransaction.CreditCard.SecurityCode = '123'
     creditCardTransaction.InstallmentCount = 1
 
-    shoppingCartItem = ShoppingCartItemCollection.new
+    shoppingCartItem = Gateway::ShoppingCartItemCollection.new
     shoppingCartItem.Description = 'Red Lightsaber'
     shoppingCartItem.DiscountAmountInCents = 0
     shoppingCartItem.ItemReference = 'NumeroDoProduto'
@@ -241,7 +242,7 @@ RSpec.describe Gateway do
     shoppingCartItem.TotalCostInCents = 18000
     shoppingCartItem.UnitCostInCents = 0
 
-    shoppingCartCollection = ShoppingCartCollection.new
+    shoppingCartCollection = Gateway::ShoppingCartCollection.new
     shoppingCartCollection.DeliveryAddress.City = 'Galaxy far far away'
     shoppingCartCollection.DeliveryAddress.Complement = 'Bridge'
     shoppingCartCollection.DeliveryAddress.Country = 'Brazil'
@@ -254,9 +255,9 @@ RSpec.describe Gateway do
     shoppingCartCollection.ShoppingCartItemCollection << shoppingCartItem
 
     # creates request object for transaction creation
-    createSaleRequest = CreateSaleRequest.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
 
-    buyerAddress = BuyerAddress.new
+    buyerAddress = Gateway::BuyerAddress.new
     buyerAddress.AddressType = 'Residential'
     buyerAddress.City = 'Tatooine'
     buyerAddress.Complement = ''
@@ -296,10 +297,10 @@ RSpec.describe Gateway do
   end
 
   it 'should consult the order with order key' do
-    querySaleRequest = QuerySaleRequest.new
-    createSaleRequest = CreateSaleRequest.new
+    querySaleRequest = Gateway::QuerySaleRequest.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
 
-    boletoTransaction = BoletoTransaction.new
+    boletoTransaction = Gateway::BoletoTransaction.new
     boletoTransaction.AmountInCents = 100
     boletoTransaction.BankNumber = '237'
     boletoTransaction.DocumentNumber = '12345678901'
@@ -313,7 +314,7 @@ RSpec.describe Gateway do
     boleto_response = gateway.CreateSale(createSaleRequest)
 
     querySaleRequest.OrderKey = boleto_response['OrderResult']['OrderKey']
-    responseQuery = gateway.Query(QuerySaleRequest.QuerySaleRequestEnum[:OrderKey], querySaleRequest.OrderKey)
+    responseQuery = gateway.Query(Gateway::QuerySaleRequest.QuerySaleRequestEnum[:OrderKey], querySaleRequest.OrderKey)
 
     orderKey = responseQuery["SaleDataCollection"][0]["OrderData"]["OrderKey"]
 
@@ -321,10 +322,10 @@ RSpec.describe Gateway do
   end
 
   it 'should consult the order with order reference' do
-    querySaleRequest = QuerySaleRequest.new
-    createSaleRequest = CreateSaleRequest.new
+    querySaleRequest = Gateway::QuerySaleRequest.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
 
-    boletoTransaction = BoletoTransaction.new
+    boletoTransaction = Gateway::BoletoTransaction.new
     boletoTransaction.AmountInCents = 100
     boletoTransaction.BankNumber = '237'
     boletoTransaction.DocumentNumber = '12345678901'
@@ -339,7 +340,7 @@ RSpec.describe Gateway do
     boleto_response = gateway.CreateSale(createSaleRequest)
 
     querySaleRequest.OrderReference = boleto_response['OrderResult']['OrderReference']
-    responseQuery = gateway.Query(QuerySaleRequest.QuerySaleRequestEnum[:OrderReference], querySaleRequest.OrderReference)
+    responseQuery = gateway.Query(Gateway::QuerySaleRequest.QuerySaleRequestEnum[:OrderReference], querySaleRequest.OrderReference)
 
     orderReference = responseQuery["SaleDataCollection"][0]["OrderData"]["OrderReference"]
 
@@ -347,11 +348,11 @@ RSpec.describe Gateway do
   end
 
   it 'should do a retry method' do
-    retrySaleRequest = RetrySaleRequest.new
-    retrySaleCreditCardTransactionItem = RetrySaleCreditCardTransaction.new
+    retrySaleRequest = Gateway::RetrySaleRequest.new
+    retrySaleCreditCardTransactionItem = Gateway::RetrySaleCreditCardTransaction.new
 
-    createSaleRequest = CreateSaleRequest.new
-    creditCardTransactionItem = CreditCardTransaction.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
+    creditCardTransactionItem = Gateway::CreditCardTransaction.new
     creditCardTransactionItem.AmountInCents = 100
     creditCardTransactionItem.CreditCard.CreditCardBrand = 'Visa'
     creditCardTransactionItem.CreditCard.CreditCardNumber = '41111111111111'
@@ -392,8 +393,8 @@ RSpec.describe Gateway do
   end
 
   it 'should do a retry method with only order key' do
-    createSaleRequest = CreateSaleRequest.new
-    creditCardTransactionItem = CreditCardTransaction.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
+    creditCardTransactionItem = Gateway::CreditCardTransaction.new
     creditCardTransactionItem.AmountInCents = 100
     creditCardTransactionItem.CreditCard.CreditCardBrand = 'Visa'
     creditCardTransactionItem.CreditCard.CreditCardNumber = '41111111111111'
@@ -414,7 +415,7 @@ RSpec.describe Gateway do
     orderKey = responseCreate["OrderResult"]["OrderKey"]
     transactionKey = responseCreate['CreditCardTransactionResultCollection'][0]['TransactionKey']
 
-    retrySaleRequest = RetrySaleRequest.new
+    retrySaleRequest = Gateway::RetrySaleRequest.new
 
     # monta o objeto de retentativa
     retrySaleRequest.OrderKey = orderKey
@@ -427,8 +428,8 @@ RSpec.describe Gateway do
   end
 
   it 'should cancel a transaction' do
-    createSaleRequest = CreateSaleRequest.new
-    creditCardTransactionItem = CreditCardTransaction.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
+    creditCardTransactionItem = Gateway::CreditCardTransaction.new
     creditCardTransactionItem.AmountInCents = 100
     creditCardTransactionItem.CreditCard.CreditCardBrand = 'Visa'
     creditCardTransactionItem.CreditCard.CreditCardNumber = '41111111111111'
@@ -453,13 +454,13 @@ RSpec.describe Gateway do
     transactionKey = responseCreate['CreditCardTransactionResultCollection'][0]['TransactionKey']
 
     # itens necessarios para cancelamento da transacao de cartao de credito
-    cancelCreditCardTransactionItem = ManageCreditCardTransaction.new
+    cancelCreditCardTransactionItem = Gateway::ManageCreditCardTransaction.new
     cancelCreditCardTransactionItem.AmountInCents = 100
     cancelCreditCardTransactionItem.TransactionKey = transactionKey
     cancelCreditCardTransactionItem.TransactionReference = 'RubySDK-CancelTest'
 
     # monta o objeto para cancelamento de transacao
-    cancelSaleRequest = ManageSaleRequest.new
+    cancelSaleRequest = Gateway::ManageSaleRequest.new
     cancelSaleRequest.OrderKey = orderKey
     cancelSaleRequest.CreditCardTransactionCollection << cancelCreditCardTransactionItem
 
@@ -469,8 +470,8 @@ RSpec.describe Gateway do
   end
 
   it 'should capture a transaction' do
-    createSaleRequest = CreateSaleRequest.new
-    creditCardTransactionItem = CreditCardTransaction.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
+    creditCardTransactionItem = Gateway::CreditCardTransaction.new
     creditCardTransactionItem.AmountInCents = 100
     creditCardTransactionItem.CreditCard.CreditCardBrand = 'Visa'
     creditCardTransactionItem.CreditCard.CreditCardNumber = '41111111111111'
@@ -495,13 +496,13 @@ RSpec.describe Gateway do
     transactionKey = responseCreate['CreditCardTransactionResultCollection'][0]['TransactionKey']
 
     # itens necessarios para captura da transacao de cartao de credito
-    captureCreditCardTransactionItem = ManageCreditCardTransaction.new
+    captureCreditCardTransactionItem = Gateway::ManageCreditCardTransaction.new
     captureCreditCardTransactionItem.AmountInCents = 100
     captureCreditCardTransactionItem.TransactionKey = transactionKey
     captureCreditCardTransactionItem.TransactionReference = 'RubySDK-CaptureTest'
 
     # monta o objeto para cancelamento de transacao
-    captureSaleRequest = ManageSaleRequest.new
+    captureSaleRequest = Gateway::ManageSaleRequest.new
     captureSaleRequest.OrderKey = orderKey
     captureSaleRequest.CreditCardTransactionCollection << captureCreditCardTransactionItem
 
@@ -512,7 +513,7 @@ RSpec.describe Gateway do
   end
 
   it 'should do a parse xml to notification interpretation' do
-    creditCardTransactionItem = CreditCardTransaction.new
+    creditCardTransactionItem = Gateway::CreditCardTransaction.new
     creditCardTransactionItem.AmountInCents = 100
     creditCardTransactionItem.TransactionReference = 'Ruby PostNotification Test'
     creditCardTransactionItem.InstallmentCount = 1
@@ -525,7 +526,7 @@ RSpec.describe Gateway do
     creditCardTransactionItem.CreditCard.ExpYear = 20
     creditCardTransactionItem.Options.PaymentMethodCode = 1
 
-    createSaleRequest = CreateSaleRequest.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
     createSaleRequest.CreditCardTransactionCollection << creditCardTransactionItem
 
     response_hash = gateway.CreateSale(createSaleRequest)
@@ -536,12 +537,12 @@ RSpec.describe Gateway do
     # expect(credit_card_result['CreditCardOperation']).to eq 'AuthOnly'
     # expect(credit_card_result['CreditCardTransactionStatus']).to eq 'AuthorizedPendingCapture'
 
-    captureCreditCardTransactionItem = ManageCreditCardTransaction.new
+    captureCreditCardTransactionItem = Gateway::ManageCreditCardTransaction.new
     captureCreditCardTransactionItem.AmountInCents = creditCardTransactionItem.AmountInCents
     captureCreditCardTransactionItem.TransactionKey = credit_card_result['TransactionKey']
     captureCreditCardTransactionItem.TransactionReference = creditCardTransactionItem.TransactionReference
 
-    captureSale = ManageSaleRequest.new
+    captureSale = Gateway::ManageSaleRequest.new
     captureSale.OrderKey = response_hash['OrderResult']['OrderKey']
     captureSale.CreditCardTransactionCollection << captureCreditCardTransactionItem
 
@@ -612,39 +613,41 @@ RSpec.describe Gateway do
     expect(response.nil?).to eq false
   end
 
-  # it 'should bring the transaction report file' do
-  #   date = Date.new(2015, 9, 19)
-  #   result = gateway.TransactionReportFile(date)
-  #   split_commas = result.split(',')
-  #
-  #   expect(split_commas[1]).to eq '20150919'
-  # end
-  #
-  # it 'should parse the transaction report file received' do
-  #   date = Date.new(2015, 9, 19)
-  #   request_to_parse = gateway.TransactionReportFile(date)
-  #   result = gateway.TransactionReportFileParser(request_to_parse)
-  #
-  #   expect(result['Header'].TransactionProcessedDate).to eq '20150919'
-  # end
-  #
-  # it 'should save the transaction report file at selected path' do
-  #   date = Date.new(2015, 9, 19)
-  #
-  #   file = Tempfile.new('Test')
-  #   gateway.TransactionReportFileDownloader(date, 'Test', file.path)
-  #
-  #   file_path = file.path.to_s + 'Test.txt'
-  #   file_exist = File.exist?(file_path)
-  #
-  #   file.close
-  #   file.unlink
-  #
-  #   expect(file_exist).to eq true
-  # end
+=begin
+  it 'should bring the transaction report file' do
+    date = Date.new(2015, 9, 19)
+    result = gateway.TransactionReportFile(date)
+    split_commas = result.split(',')
+
+    expect(split_commas[1]).to eq '20150919'
+  end
+
+  it 'should parse the transaction report file received' do
+    date = Date.new(2015, 9, 19)
+    request_to_parse = gateway.TransactionReportFile(date)
+    result = gateway.TransactionReportFileParser(request_to_parse)
+
+    expect(result['Header'].TransactionProcessedDate).to eq '20150919'
+  end
+
+  it 'should save the transaction report file at selected path' do
+    date = Date.new(2015, 9, 19)
+
+    file = Tempfile.new('Test')
+    gateway.TransactionReportFileDownloader(date, 'Test', file.path)
+
+    file_path = file.path.to_s + 'Test.txt'
+    file_exist = File.exist?(file_path)
+
+    file.close
+    file.unlink
+
+    expect(file_exist).to eq true
+  end
+=end
 
   it 'should consult transaction with instant buy key' do
-    credit_card_transaction = CreditCardTransaction.new
+    credit_card_transaction = Gateway::CreditCardTransaction.new
     credit_card_transaction.CreditCard.CreditCardNumber = '4111111111111111'
     credit_card_transaction.CreditCard.CreditCardBrand = 'Visa'
     credit_card_transaction.CreditCard.ExpMonth = 10
@@ -653,7 +656,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
     credit_card_transaction.AmountInCents = 100
 
-    sale_request = CreateSaleRequest.new
+    sale_request = Gateway::CreateSaleRequest.new
     sale_request.CreditCardTransactionCollection << credit_card_transaction
 
     sale_response = gateway.CreateSale(sale_request)
@@ -669,7 +672,7 @@ RSpec.describe Gateway do
 
   it 'should consult transaction with buyer key' do
 
-    credit_card_transaction = CreditCardTransaction.new
+    credit_card_transaction = Gateway::CreditCardTransaction.new
     credit_card_transaction.CreditCard.CreditCardNumber = '4111111111111111'
     credit_card_transaction.CreditCard.CreditCardBrand = 'Visa'
     credit_card_transaction.CreditCard.ExpMonth = 10
@@ -678,7 +681,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
     credit_card_transaction.AmountInCents = 100
 
-    sale_request = CreateSaleRequest.new
+    sale_request = Gateway::CreateSaleRequest.new
     sale_request.Buyer.Name = 'Anakin Skywalker'
     sale_request.Buyer.Birthdate = Date.new(1994, 9, 26).strftime("%Y-%m-%dT%H:%M:%S")
     sale_request.Buyer.DocumentNumber = '12345678901'
@@ -697,7 +700,7 @@ RSpec.describe Gateway do
   end
 
   it 'should do a credit card transaction with instant buy key' do
-    credit_card_transaction = CreditCardTransaction.new
+    credit_card_transaction = Gateway::CreditCardTransaction.new
     credit_card_transaction.CreditCard.CreditCardNumber = '4111111111111111'
     credit_card_transaction.CreditCard.CreditCardBrand = 'Visa'
     credit_card_transaction.CreditCard.ExpMonth = 10
@@ -706,7 +709,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
     credit_card_transaction.AmountInCents = 100
 
-    sale_request = CreateSaleRequest.new
+    sale_request = Gateway::CreateSaleRequest.new
     sale_request.CreditCardTransactionCollection << credit_card_transaction
 
     sale_response = gateway.CreateSale(sale_request)
@@ -716,12 +719,12 @@ RSpec.describe Gateway do
     instant_buy_key = sale_response['CreditCardTransactionResultCollection'][0]['CreditCard']['InstantBuyKey']
 
     # coleta dados do cartao
-    creditCardTransaction = CreditCardTransaction.new
+    creditCardTransaction = Gateway::CreditCardTransaction.new
     creditCardTransaction.AmountInCents = 100
     creditCardTransaction.CreditCard.InstantBuyKey = instant_buy_key
 
     # cria a transacao
-    createSaleRequest = CreateSaleRequest.new
+    createSaleRequest = Gateway::CreateSaleRequest.new
     createSaleRequest.CreditCardTransactionCollection << creditCardTransaction
 
     # faz a requisicao de criação de transacao, retorna um hash com a resposta

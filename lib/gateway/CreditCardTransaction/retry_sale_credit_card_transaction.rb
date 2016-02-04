@@ -1,13 +1,15 @@
-class RetrySaleCreditCardTransaction
+module Gateway
 
-  attr_accessor :TransactionKey
+  class RetrySaleCreditCardTransaction
 
-  attr_accessor :SecurityCode
+    attr_accessor :TransactionKey
 
-  def to_json
-    hash = {}
-    instance_variables.each {|var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
-    hash
+    attr_accessor :SecurityCode
+
+    def to_json
+      hash = {}
+      instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
+      hash
+    end
   end
-
 end

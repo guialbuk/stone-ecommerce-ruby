@@ -1,17 +1,19 @@
-class SaleOrderData
-  # Número do pedido no sistema da loja
-  attr_accessor :OrderReference
+module Gateway
 
-  # Chave do pedido. Utilizado para identificar o pedido no Gateway
-  attr_accessor :OrderKey
+  class SaleOrderData
+    # Número do pedido no sistema da loja
+    attr_accessor :OrderReference
 
-  # Data de criação do pedido no Gateway
-  attr_accessor :CreateDate
+    # Chave do pedido. Utilizado para identificar o pedido no Gateway
+    attr_accessor :OrderKey
 
-  def to_json
-    hash = {}
-    instance_variables.each {|var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
-    hash
+    # Data de criação do pedido no Gateway
+    attr_accessor :CreateDate
+
+    def to_json
+      hash = {}
+      instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
+      hash
+    end
   end
-
 end

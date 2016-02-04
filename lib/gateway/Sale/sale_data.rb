@@ -1,5 +1,4 @@
 require_relative 'sale_order_data'
-require_relative '../../gateway/AntiFraud/query_sale_anti_fraud_analysis_data'
 
 class SaleData
   # Lista transações de cartão de crédito
@@ -21,7 +20,6 @@ class SaleData
     @CreditCardTransactionDataCollection = Array.new
     @BoletoTransactionDataCollection = Array.new
     @OrderData = SaleOrderData.new
-    @AntiFraudAnalysisData = QuerySaleAntiFraudAnalysisData.new
   end
 
   def to_json

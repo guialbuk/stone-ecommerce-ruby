@@ -1,26 +1,28 @@
-class ShoppingCartCollection
+module Gateway
 
-  attr_accessor :FreighCostInCents
+  class ShoppingCartCollection
 
-  attr_accessor :EstimatedDeliveryDate
+    attr_accessor :FreighCostInCents
 
-  attr_accessor :DeliveryDeadline
+    attr_accessor :EstimatedDeliveryDate
 
-  attr_accessor :ShippingCompany
+    attr_accessor :DeliveryDeadline
 
-  attr_accessor :DeliveryAddress
+    attr_accessor :ShippingCompany
 
-  attr_accessor :ShoppingCartItemCollection
+    attr_accessor :DeliveryAddress
 
-  def initialize
-    @ShoppingCartItemCollection = Array.new
-    @DeliveryAddress = DeliveryAddress.new
+    attr_accessor :ShoppingCartItemCollection
+
+    def initialize
+      @ShoppingCartItemCollection = Array.new
+      @DeliveryAddress = DeliveryAddress.new
+    end
+
+    def to_json
+      hash = {}
+      instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
+      hash
+    end
   end
-
-  def to_json
-    hash = {}
-    instance_variables.each {|var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
-    hash
-  end
-
 end

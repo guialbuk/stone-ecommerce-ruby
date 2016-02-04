@@ -1,23 +1,25 @@
-class Recurrency
-  # Frequência da recorrência
-  attr_accessor :Frequency
+module Gateway
 
-  # Intervalo de recorrência
-  attr_accessor :Interval
+  class Recurrency
+    # Frequência da recorrência
+    attr_accessor :Frequency
 
-  # Data da primeira cobrança
-  attr_accessor :DateToStartBilling
+    # Intervalo de recorrência
+    attr_accessor :Interval
 
-  # Total de recorrências
-  attr_accessor :Recurrences
+    # Data da primeira cobrança
+    attr_accessor :DateToStartBilling
 
-  # Informa se será necessário efetuar o procedimento OneDollarAuth antes de registrar a recorrência
-  attr_accessor :OneDollarAuth
+    # Total de recorrências
+    attr_accessor :Recurrences
 
-  def to_json
-    hash = {}
-    instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
-    hash
+    # Informa se será necessário efetuar o procedimento OneDollarAuth antes de registrar a recorrência
+    attr_accessor :OneDollarAuth
+
+    def to_json
+      hash = {}
+      instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
+      hash
+    end
   end
-
 end

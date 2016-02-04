@@ -1,32 +1,34 @@
-class DeliveryAddress
-  # País. Opções: Brazil, USA, Argentina, Bolivia, Chile, Colombia, Uruguay, Mexico, Paraguay
-  attr_accessor :Country
+module Gateway
 
-  # Estado
-  attr_accessor :State
+  class DeliveryAddress
+    # País. Opções: Brazil, USA, Argentina, Bolivia, Chile, Colombia, Uruguay, Mexico, Paraguay
+    attr_accessor :Country
 
-  # Cidade
-  attr_accessor :City
+    # Estado
+    attr_accessor :State
 
-  # Distrito
-  attr_accessor :District
+    # Cidade
+    attr_accessor :City
 
-  # Logradouro
-  attr_accessor :Street
+    # Distrito
+    attr_accessor :District
 
-  # Número
-  attr_accessor :Number
+    # Logradouro
+    attr_accessor :Street
 
-  # Complemento
-  attr_accessor :Complement
+    # Número
+    attr_accessor :Number
 
-  # zip code
-  attr_accessor :ZipCode
+    # Complemento
+    attr_accessor :Complement
 
-  def to_json
-    hash = {}
-    instance_variables.each {|var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
-    hash
+    # zip code
+    attr_accessor :ZipCode
+
+    def to_json
+      hash = {}
+      instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
+      hash
+    end
   end
-
 end

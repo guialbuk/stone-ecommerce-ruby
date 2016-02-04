@@ -1,20 +1,22 @@
-class RequestData
-  # Identificador da origem de venda na loja
-  attr_accessor :Origin
+module Gateway
 
-  # Identificador da sessão do usuário no sistema da loja (utilizado pelo serviço de antifraude)
-  attr_accessor :SessionId
+  class RequestData
+    # Identificador da origem de venda na loja
+    attr_accessor :Origin
 
-  # Endereço IP do cliente da loja
-  attr_accessor :IpAddress
+    # Identificador da sessão do usuário no sistema da loja (utilizado pelo serviço de antifraude)
+    attr_accessor :SessionId
 
-  # Categoria da venda e-commerce. B2B ou B2C
-  attr_accessor :EcommerceCategory
+    # Endereço IP do cliente da loja
+    attr_accessor :IpAddress
 
-  def to_json
-    hash = {}
-    instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
-    hash
+    # Categoria da venda e-commerce. B2B ou B2C
+    attr_accessor :EcommerceCategory
+
+    def to_json
+      hash = {}
+      instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
+      hash
+    end
   end
-
 end

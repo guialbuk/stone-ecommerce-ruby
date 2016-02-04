@@ -1,32 +1,34 @@
-class CreditCardTransaction
+module Gateway
 
-  attr_accessor :CreditCard
+  class CreditCardTransaction
 
-  attr_accessor :Options
+    attr_accessor :CreditCard
 
-  attr_accessor :Recurrency
+    attr_accessor :Options
 
-  attr_accessor :AmountInCents
+    attr_accessor :Recurrency
 
-  attr_accessor :InstallmentCount
+    attr_accessor :AmountInCents
 
-  attr_accessor :CreditCardOperation
+    attr_accessor :InstallmentCount
 
-  attr_accessor :TransactionReference
+    attr_accessor :CreditCardOperation
 
-  attr_accessor :TransactionDateInMerchant
+    attr_accessor :TransactionReference
+
+    attr_accessor :TransactionDateInMerchant
 
 
-  def initialize
-    @Options = CreditCardTransactionOptions.new
-    @Recurrency = Recurrency.new
-    @CreditCard = CreditCard.new
+    def initialize
+      @Options = CreditCardTransactionOptions.new
+      @Recurrency = Recurrency.new
+      @CreditCard = CreditCard.new
+    end
+
+    def to_json
+      hash = {}
+      instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
+      hash
+    end
   end
-
-  def to_json
-    hash = {}
-    instance_variables.each {|var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
-    hash
-  end
-
 end
