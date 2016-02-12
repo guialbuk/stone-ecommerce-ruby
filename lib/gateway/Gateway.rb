@@ -2,6 +2,7 @@ require_relative '../../lib/stone_ecommerce'
 module Gateway
 
   class Gateway
+    extend Gem::Deprecate
 
     attr_reader :serviceEnvironment
 
@@ -17,7 +18,7 @@ module Gateway
     @@SERVICE_URL_PRODUCTION = 'https://transaction.stone.com.br'
 
     # URL de homologacao
-    @@SERVICE_URL_STAGING = ''
+    @@SERVICE_URL_STAGING = 'https://stagingv2.mundipaggone.com'
 
     # URL de sandbox
     @@SERVICE_URL_SANDBOX = 'https://transaction.stone.com.br'
@@ -356,11 +357,49 @@ module Gateway
       return response
     end
 
-    # faz uma requisicao com instant buy key
+    # DEPRECATED
     def InstantBuyKey(instant_buy_key)
+      GetCreditCard(instant_buy_key)
+    end
+    deprecate :InstantBuyKey, :GetCreditCard, 2016, 04
+
+    # DEPRECATED
+    def BuyerKey(buyer_key)
+      GetCreditCardWithBuyerKey(buyer_key)
+    end
+    deprecate :BuyerKey, :GetCreditCardWithBuyerKey, 2016, 04
+
+    # faz um get credit card com buyer key
+    def GetCreditCardWithBuyerKey(buyer_key)
       # try, tenta fazer o request
       begin
 
+        # se for homologacao faz a chamada por aqui
+        if @serviceEnvironment == :staging
+          response = getRequest(@@SERVICE_URL_STAGING + '/CreditCard/BuyerKey=' + buyer_key)
+
+          # se for producao, faz a chamada por aqui
+        elsif @serviceEnvironment == :production
+          response = getRequest(@@SERVICE_URL_PRODUCTION + '/CreditCard/BuyerKey=' + buyer_key)
+
+          # se for sandbox, faz a chamada por aqui
+        elsif @serviceEnvironment == :sandbox
+          response = getRequest(@@SERVICE_URL_SANDBOX + '/CreditCard/BuyerKey=' + buyer_key)
+        end
+
+          # se der algum erro, trata aqui
+      rescue Exception => e
+        return e.message
+      end
+
+      # se nao houver erros, retorna o objeto
+      response
+    end
+
+    # Faz um get no cartão de crédito
+    def GetCreditCard(instant_buy_key)
+      # try, tenta fazer o request
+      begin
         # se for homologacao faz a chamada por aqui
         if @serviceEnvironment == :staging
           getRequest(@@SERVICE_URL_STAGING + '/CreditCard/' + instant_buy_key)
@@ -380,22 +419,101 @@ module Gateway
       end
     end
 
-    # faz uma requisicao com buyer key
-    def BuyerKey(buyer_key)
+    def CreateCreditCard(create_instant_buy_data)
+      sale_hash = create_instant_buy_data.to_json
+      begin
+        if create_instant_buy_data.BillingAddress.to_json.any?
+          sale_hash['BillingAddress'] = create_instant_buy_data.BillingAddress.to_json
+        else
+          sale_hash['BillingAddress'] = nil
+        end
+
+        # se for homologacao faz a chamada por aqui
+        if @serviceEnvironment == :staging
+          url = @@SERVICE_URL_STAGING + '/CreditCard/'
+
+          # se for producao, faz a chamada por aqui
+        elsif @serviceEnvironment == :production
+          url = @@SERVICE_URL_PRODUCTION + '/CreditCard/'
+
+          # se for sandbox, faz a chamada por aqui
+        elsif @serviceEnvironment == :sandbox
+          url = @@SERVICE_URL_SANDBOX + '/CreditCard/'
+        end
+
+        response = postRequest(sale_hash.to_json, url)
+
+          # se der algum erro, trata aqui
+      rescue Exception => e
+        return e.message
+      end
+      # se nao houver erros, retorna o objeto
+      response
+    end
+
+    def UpdateCreditCard(instant_buy_key, buyer_key)
+      begin
+        sale_hash = {'BuyerKey' => buyer_key}
+
+        # se for homologacao faz a chamada por aqui
+        if @serviceEnvironment == :staging
+          url = @@SERVICE_URL_STAGING + '/CreditCard/' + instant_buy_key
+
+          # se for producao, faz a chamada por aqui
+        elsif @serviceEnvironment == :production
+          url = @@SERVICE_URL_PRODUCTION + '/CreditCard/' + instant_buy_key
+
+          # se for sandbox, faz a chamada por aqui
+        elsif @serviceEnvironment == :sandbox
+          url = @@SERVICE_URL_SANDBOX + '/CreditCard/' + instant_buy_key
+        end
+
+        response = patchRequest(sale_hash.to_json, url)
+          # se der algum erro, trata aqui
+      rescue Exception => e
+        return e.message
+      end
+      # se nao houver erros, retorna o objeto
+      response
+    end
+
+    def DeleteCreditCard(instant_buy_key)
+      # try, tenta fazer o request
+      begin
+        # se for homologacao faz a chamada por aqui
+        if @serviceEnvironment == :staging
+          deleteRequest(@@SERVICE_URL_STAGING + '/CreditCard/' + instant_buy_key)
+
+          # se for producao, faz a chamada por aqui
+        elsif @serviceEnvironment == :production
+          deleteRequest(@@SERVICE_URL_PRODUCTION + '/CreditCard/' + instant_buy_key)
+
+          # se for sandbox
+        elsif @serviceEnvironment == :sandbox
+          deleteRequest(@@SERVICE_URL_SANDBOX + '/CreditCard/' + instant_buy_key)
+        end
+
+          # se der algum erro, trata aqui
+      rescue Exception => e
+        return e.message
+      end
+    end
+
+    def GetBuyer(buyer_key)
       # try, tenta fazer o request
       begin
 
         # se for homologacao faz a chamada por aqui
         if @serviceEnvironment == :staging
-          response = getRequest(@@SERVICE_URL_STAGING + '/CreditCard/' + buyer_key + '/BuyerKey')
+          response = getRequest(@@SERVICE_URL_STAGING + '/Buyer/' + buyer_key)
 
           # se for producao, faz a chamada por aqui
         elsif @serviceEnvironment == :production
-          response = getRequest(@@SERVICE_URL_PRODUCTION + '/CreditCard/' + buyer_key + '/BuyerKey')
+          response = getRequest(@@SERVICE_URL_PRODUCTION + '/Buyer/' + buyer_key)
 
           # se for sandbox, faz a chamada por aqui
         elsif @serviceEnvironment == :sandbox
-          response = getRequest(@@SERVICE_URL_SANDBOX + '/CreditCard/' + buyer_key + '/BuyerKey')
+          response = getRequest(@@SERVICE_URL_SANDBOX + '/Buyer/' + buyer_key)
         end
 
           # se der algum erro, trata aqui
@@ -407,11 +525,66 @@ module Gateway
       response
     end
 
+    def CreateBuyer(buyer_request)
+      sale_hash = buyer_request.to_json
+      sale_hash['AddressCollection'] = []
+      begin
+        if buyer_request.AddressCollection.any? == false || buyer_request.AddressCollection.nil?
+          sale_hash['AddressCollection'] = nil
+        else
+          buyer_request.AddressCollection.each do |address|
+            a = address.to_json
+            sale_hash['AddressCollection'] << a
+          end
+        end
+
+        # se for homologacao faz a chamada por aqui
+        if @serviceEnvironment == :staging
+          url = @@SERVICE_URL_STAGING + '/Buyer/'
+
+          # se for producao, faz a chamada por aqui
+        elsif @serviceEnvironment == :production
+          url = @@SERVICE_URL_PRODUCTION + '/Buyer/'
+
+          # se for sandbox, faz a chamada por aqui
+        elsif @serviceEnvironment == :sandbox
+          url = @@SERVICE_URL_SANDBOX + '/Buyer/'
+        end
+
+        response = postRequest(sale_hash.to_json, url)
+      rescue Exception => e
+        return e.message
+      end
+      response
+    end
+
     # funcao de post generica
     def postRequest(payload, url)
       response = nil
       begin
         response = RestClient.post(url, payload, headers=@@SERVICE_HEADERS)
+      rescue RestClient::ExceptionWithResponse => err
+        return err.response
+      end
+      json_response = JSON.load response
+      json_response
+    end
+
+    # funcao patch generica
+    def patchRequest(payload, url)
+      begin
+        response = RestClient.patch(url, payload, headers=@@SERVICE_HEADERS)
+      rescue RestClient::ExceptionWithResponse => err
+        return err.response
+      end
+      json_response = JSON.load response
+      json_response
+    end
+
+    # funcao de delete generica
+    def deleteRequest(url)
+      begin
+        response = RestClient.delete(url, headers=@@SERVICE_HEADERS)
       rescue RestClient::ExceptionWithResponse => err
         return err.response
       end
