@@ -18,7 +18,7 @@ module Gateway
     @@SERVICE_URL_PRODUCTION = 'https://transaction.stone.com.br'
 
     # URL de homologacao
-    @@SERVICE_URL_STAGING = 'https://stagingv2.mundipaggone.com'
+    @@SERVICE_URL_STAGING = ''
 
     # URL de sandbox
     @@SERVICE_URL_SANDBOX = 'https://transaction.stone.com.br'
