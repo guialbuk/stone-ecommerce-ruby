@@ -18,7 +18,7 @@ module Gateway
     @@SERVICE_URL_PRODUCTION = 'https://transaction.stone.com.br'
 
     # URL de homologacao
-    @@SERVICE_URL_STAGING = ''
+    @@SERVICE_URL_STAGING = 'https://stagingv2.mundipaggone.com'
 
     # URL de sandbox
     @@SERVICE_URL_SANDBOX = 'https://transaction.stone.com.br'
@@ -419,6 +419,7 @@ module Gateway
       end
     end
 
+    # Cria um cartão de crédito
     def CreateCreditCard(create_instant_buy_data)
       sale_hash = create_instant_buy_data.to_json
       begin
@@ -451,9 +452,10 @@ module Gateway
       response
     end
 
-    def UpdateCreditCard(instant_buy_key, buyer_key)
+    # Atualiza o cartão de crédito
+    def UpdateCreditCard(instant_buy_key, update_instant_buy_data_request)
       begin
-        sale_hash = {'BuyerKey' => buyer_key}
+        sale_hash = update_instant_buy_data_request.to_json
 
         # se for homologacao faz a chamada por aqui
         if @serviceEnvironment == :staging
@@ -477,6 +479,7 @@ module Gateway
       response
     end
 
+    # Deleta um cartão de crédito
     def DeleteCreditCard(instant_buy_key)
       # try, tenta fazer o request
       begin
@@ -499,6 +502,7 @@ module Gateway
       end
     end
 
+    # Busca um buyer
     def GetBuyer(buyer_key)
       # try, tenta fazer o request
       begin
@@ -525,6 +529,7 @@ module Gateway
       response
     end
 
+    # Cria um buyer
     def CreateBuyer(buyer_request)
       sale_hash = buyer_request.to_json
       sale_hash['AddressCollection'] = []

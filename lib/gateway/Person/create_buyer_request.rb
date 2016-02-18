@@ -1,5 +1,5 @@
 module Gateway
-  class BuyerRequest < Person
+  class CreateBuyerRequest < Person
     attr_accessor :AddressCollection
 
     attr_accessor :BuyerCategory

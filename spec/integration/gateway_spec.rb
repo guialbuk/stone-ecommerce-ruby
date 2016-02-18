@@ -1,9 +1,9 @@
 require_relative '../../lib/stone_ecommerce'
 require_relative 'test_helper'
 
-merchant_key = 'merchant_key'
+merchant_key = '8A2DD57F-1ED9-4153-B4CE-69683EFADAD5'
 
-gateway = Gateway::Gateway.new(:production, merchant_key)
+gateway = Gateway::Gateway.new(:staging, merchant_key)
 
 RSpec.describe Gateway do
   it 'should create a sale with boleto' do
@@ -777,7 +777,7 @@ RSpec.describe Gateway do
   end
 
   it 'should create a credit card' do
-    create_instant_buy_data = Gateway::CreateInstantBuyData.new
+    create_instant_buy_data = Gateway::CreateInstantBuyDataRequest.new
     create_instant_buy_data.CreditCardNumber = '4111111111111111'
     create_instant_buy_data.ExpMonth = 10
     create_instant_buy_data.ExpYear = 2018
@@ -799,8 +799,67 @@ RSpec.describe Gateway do
     expect(response['ErrorReport']).to eq nil
   end
 
+  it 'should create credit card with buyerkey in it' do
+    address = Gateway::BuyerAddress.new
+    address.AddressType = 'Residential'
+    address.City = 'Tatooine'
+    address.Complement = ''
+    address.Country = 'Brazil'
+    address.District = 'Mos Eisley'
+    address.Number = '123'
+    address.State = 'RJ'
+    address.Street = 'Mos Eisley Cantina'
+    address.ZipCode = '20001000'
+
+    buyer_request = Gateway::CreateBuyerRequest.new
+    buyer_request.AddressCollection << address
+    buyer_request.Birthdate = DateTime.new(1990,8,20,0,0,0).strftime("%Y-%m-%dT%H:%M:%S")
+    buyer_request.BuyerCategory = 'Normal'
+    buyer_request.BuyerReference = 'C3PO'
+    buyer_request.CreateDateInMerchant = DateTime.new(2015,12,11,18,36,45).strftime("%Y-%m-%dT%H:%M:%S")
+    buyer_request.DocumentNumber = '12345678901'
+    buyer_request.DocumentType = 'CPF'
+    buyer_request.Email = 'lskywalker@r2d2.com'
+    buyer_request.EmailType = 'Personal'
+    buyer_request.FacebookId = 'lukeskywalker8917'
+    buyer_request.Gender = 'M'
+    buyer_request.HomePhone = '(21)123456789'
+    buyer_request.IpAddress = '192.168.1.1'
+    buyer_request.LastBuyerUpdateInMerchant = DateTime.now.strftime("%Y-%m-%dT%H:%M:%S")
+    buyer_request.MobilePhone = '(21)987654321'
+    buyer_request.Name = 'Luke Skywalker'
+    buyer_request.PersonType = 'Person'
+    buyer_request.TwitterId = '@lukeskywalker8917'
+    buyer_request.WorkPhone = '(21)28467902'
+
+    new_buyer_response = gateway.CreateBuyer(buyer_request)
+    buyer_key = new_buyer_response['BuyerKey']
+
+    create_instant_buy_data = Gateway::CreateInstantBuyDataRequest.new
+    create_instant_buy_data.CreditCardNumber = '4111111111111111'
+    create_instant_buy_data.ExpMonth = 10
+    create_instant_buy_data.ExpYear = 2018
+    create_instant_buy_data.SecurityCode = '123'
+    create_instant_buy_data.HolderName = 'Luke Skywalker'
+    create_instant_buy_data.CreditCardBrand = 'Visa'
+    create_instant_buy_data.IsOneDollarAuthEnabled = true
+    create_instant_buy_data.BuyerKey = buyer_key
+    create_instant_buy_data.BillingAddress.City = 'Rio de Janeiro'
+    create_instant_buy_data.BillingAddress.Complement = 'Em frente ao Aeroporto'
+    create_instant_buy_data.BillingAddress.Country = 'Brazil'
+    create_instant_buy_data.BillingAddress.District = 'Centro'
+    create_instant_buy_data.BillingAddress.Number = '123'
+    create_instant_buy_data.BillingAddress.State = 'RJ'
+    create_instant_buy_data.BillingAddress.Street = 'Av. General Justo'
+    create_instant_buy_data.BillingAddress.ZipCode = '20270004'
+
+    response = gateway.CreateCreditCard(create_instant_buy_data)
+
+    expect(response['Success']).to eq true
+  end
+
   it 'should create a credit card without billing address' do
-    create_instant_buy_data = Gateway::CreateInstantBuyData.new
+    create_instant_buy_data = Gateway::CreateInstantBuyDataRequest.new
     create_instant_buy_data.CreditCardNumber = '4111111111111111'
     create_instant_buy_data.ExpMonth = 10
     create_instant_buy_data.ExpYear = 2018
@@ -814,7 +873,7 @@ RSpec.describe Gateway do
   end
 
   it 'should update the credit card' do
-    create_instant_buy_data = Gateway::CreateInstantBuyData.new
+    create_instant_buy_data = Gateway::CreateInstantBuyDataRequest.new
     create_instant_buy_data.CreditCardNumber = '4111111111111111'
     create_instant_buy_data.ExpMonth = 10
     create_instant_buy_data.ExpYear = 2018
@@ -857,7 +916,10 @@ RSpec.describe Gateway do
 
     buyer_key = sale_response['BuyerKey']
 
-    response = gateway.UpdateCreditCard(instant_buy_key, buyer_key)
+    update_instant_buy_data_request = Gateway::UpdateInstantBuyDataRequest.new
+    update_instant_buy_data_request.BuyerKey = buyer_key
+
+    response = gateway.UpdateCreditCard(instant_buy_key, update_instant_buy_data_request)
 
     expect(response['Success']).to eq true
   end
@@ -936,7 +998,7 @@ RSpec.describe Gateway do
     address.Street = 'Mos Eisley Cantina'
     address.ZipCode = '20001000'
 
-    buyer_request = Gateway::BuyerRequest.new
+    buyer_request = Gateway::CreateBuyerRequest.new
     buyer_request.AddressCollection << address
     buyer_request.Birthdate = DateTime.new(1990,8,20,0,0,0).strftime("%Y-%m-%dT%H:%M:%S")
     buyer_request.BuyerCategory = 'Normal'

@@ -1,5 +1,5 @@
 module Gateway
-  class CreateInstantBuyData
+  class CreateInstantBuyDataRequest
     attr_accessor :IsOneDollarAuthEnabled
 
     attr_accessor :CreditCardNumber
@@ -15,6 +15,8 @@ module Gateway
     attr_accessor :CreditCardBrand
 
     attr_accessor :BillingAddress
+
+    attr_accessor :BuyerKey
 
     def initialize
       @BillingAddress = BillingAddress.new
