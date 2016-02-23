@@ -8,8 +8,6 @@ module Gateway
 
     attr_accessor :CreateDateInMerchant
 
-    attr_accessor :IpAddress
-
     attr_accessor :LastBuyerUpdateInMerchant
 
     def initialize
