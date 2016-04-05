@@ -4,7 +4,6 @@ require 'bundler/setup'
 require 'json'
 require 'rest-client'
 require 'nori'
-require 'rspec'
 require 'rexml/document'
 
 require_relative 'gateway/BoletoTransaction/boleto_transaction'
