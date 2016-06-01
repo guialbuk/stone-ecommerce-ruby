@@ -2,3 +2,11 @@ language: ruby
 rvm:
 - "2.2.3"
 - "2.1.7"
+deploy:
+  provider: rubygems
+  api_key:
+      secure: HgW5pn17AN2tx9UEOdXCL0dvp4Mk0Dr2tC46MBXZaY3z9dyr4A2ekDNdQrz8+I0++Iq/OhXql3jkqyel6L6chhzqZEP7twHL2Qp/Ik/HVJCG+SQ8CokUDDpC5GZoP0KC2cmi2HmmyU5149tDHxl6U+Hc6UsdUO6GamXgxPgWsrU/+p1xlrI428Or4VSBmQRns/tnBv62wX6UdoyDBafxW4l86stgSD2kNxBA1K5WgHf7eUSC3qweXIEd6QBwO6S0baYTaFqGI4Jfb6gIYtrab+ejG1ZBErXpFiTLOCoWNx6Kg4MbDsEv3e/I99VGSqtn8Pnqh3Mn0YZXehUWG44boq0wbPheDnHlfsu2V8n1obPpdbCHarm8ZmHpHYWPjXKKoSCLc/qtOdfOeQxv7Ez6ggCiofzj3j+N6ELuHjFHpvPyVmWRRHGonoUJQQSwfUaiPIwp/5hJyWZLl12mVIrnzFKZfpzUV5SPJMr7bPd5zCNjv72IJ5OIT+153uZWISCEcVcD+NUWYI0Mkoe6Hnu480ZU/4iIQ+3kS0Dc2ru8pR+pQOdtHraVjBsubxh95Iy4IsIxTdne7fD/ABaPKggE0Ji8VZLwKZAgR66tnfH3YIlE6IiIat3WUgXatp+H2tfACMz3GlTyx3RG1YObvVMOfbBB5YWsK44bzU6tkZJktMo=
+  gem: stone_ecommerce
+  on:
+    tags: true
+    branch: master

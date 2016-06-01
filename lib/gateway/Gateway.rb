@@ -565,14 +565,15 @@ module Gateway
 
     # funcao de post generica
     def postRequest(payload, url)
-      response = nil
       begin
         response = RestClient.post(url, payload, headers=@@SERVICE_HEADERS)
       rescue RestClient::ExceptionWithResponse => err
-        return err.response
+        response = err.response
       end
-      json_response = JSON.load response
-      json_response
+
+      JSON.load response
+    rescue JSON::ParserError => err
+      response
     end
 
     # funcao patch generica
@@ -580,10 +581,12 @@ module Gateway
       begin
         response = RestClient.patch(url, payload, headers=@@SERVICE_HEADERS)
       rescue RestClient::ExceptionWithResponse => err
-        return err.response
+        response = err.response
       end
-      json_response = JSON.load response
-      json_response
+
+      JSON.load response
+    rescue JSON::ParserError => err
+      response
     end
 
     # funcao de delete generica
@@ -591,22 +594,25 @@ module Gateway
       begin
         response = RestClient.delete(url, headers=@@SERVICE_HEADERS)
       rescue RestClient::ExceptionWithResponse => err
-        return err.response
+        response = err.response
       end
-      json_response = JSON.load response
-      json_response
+
+      JSON.load response
+    rescue JSON::ParserError => err
+      response
     end
 
     # funcao get generica
     def getRequest(url)
-      response = nil
       begin
         response = RestClient.get(url, headers=@@SERVICE_HEADERS)
       rescue RestClient::ExceptionWithResponse => err
-        return err.response
+        response = err.response
       end
-      json_response = JSON.load response
-      json_response
+
+      JSON.load response
+    rescue JSON::ParserError => err
+      response
     end
 
     def getReportFile(url)

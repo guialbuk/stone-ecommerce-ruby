@@ -1,7 +1,7 @@
 require_relative '../../lib/stone_ecommerce'
 require_relative 'test_helper'
 
-merchant_key = '8A2DD57F-1ED9-4153-B4CE-69683EFADAD5'
+merchant_key = '85328786-8BA6-420F-9948-5352F5A183EB'
 
 gateway = Gateway::Gateway.new(:production, merchant_key)
 
@@ -22,7 +22,7 @@ RSpec.describe Gateway do
 
     response = gateway.CreateSale(createSaleRequest)
 
-    expect(response[:ErrorReport]).to eq nil
+    expect(response['ErrorReport']).to eq nil
   end
 
   it 'should create a sale with credit card' do
@@ -79,7 +79,7 @@ RSpec.describe Gateway do
 
     response = gateway.CreateSale(createSaleRequest)
 
-    expect(response[:ErrorReport]).to eq nil
+    expect(response['ErrorReport']).to eq nil
 
   end
 
@@ -208,7 +208,7 @@ RSpec.describe Gateway do
     # make the request and returns a response hash
     response = gateway.CreateSale(createSaleRequest)
 
-    expect(response[:ErrorReport]).to eq nil
+    expect(response['ErrorReport']).to eq nil
   end
 
   it 'should create an anti fraud transaction' do
@@ -232,6 +232,7 @@ RSpec.describe Gateway do
     creditCardTransaction.CreditCard.HolderName = 'LUKE SKYWALKER'
     creditCardTransaction.CreditCard.SecurityCode = '123'
     creditCardTransaction.InstallmentCount = 1
+    creditCardTransaction.Options.PaymentMethodCode = 1
 
     shoppingCartItem = Gateway::ShoppingCartItemCollection.new
     shoppingCartItem.Description = 'Red Lightsaber'
@@ -293,7 +294,7 @@ RSpec.describe Gateway do
     # make the request and returns a response hash
     response = gateway.CreateSale(createSaleRequest)
 
-    expect(response[:ErrorReport]).to eq nil
+    expect(response['ErrorReport']).to eq nil
   end
 
   it 'should consult the order with order key' do
@@ -404,6 +405,7 @@ RSpec.describe Gateway do
     creditCardTransactionItem.CreditCard.SecurityCode = '123'
     creditCardTransactionItem.CreditCardOperation = 'AuthAndCapture'
     creditCardTransactionItem.TransactionReference = 'RubySDK-RetryTest'
+    creditCardTransactionItem.Options.PaymentMethodCode = 1
 
     createSaleRequest.CreditCardTransactionCollection << creditCardTransactionItem
     createSaleRequest.Order.OrderReference = 'RubySDK-RetryTest'
@@ -466,7 +468,7 @@ RSpec.describe Gateway do
 
     response = gateway.Cancel(cancelSaleRequest)
 
-    expect(response[:ErrorReport]).to eq nil
+    expect(response['ErrorReport']).to eq nil
   end
 
   it 'should capture a transaction' do
@@ -655,6 +657,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.SecurityCode = '123'
     credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
     credit_card_transaction.AmountInCents = 100
+    credit_card_transaction.Options.PaymentMethodCode = 1
 
     sale_request = Gateway::CreateSaleRequest.new
     sale_request.CreditCardTransactionCollection << credit_card_transaction
@@ -679,6 +682,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.SecurityCode = '123'
     credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
     credit_card_transaction.AmountInCents = 100
+    credit_card_transaction.Options.PaymentMethodCode = 1
 
     sale_request = Gateway::CreateSaleRequest.new
     sale_request.CreditCardTransactionCollection << credit_card_transaction
@@ -703,6 +707,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.SecurityCode = '123'
     credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
     credit_card_transaction.AmountInCents = 100
+    credit_card_transaction.Options.PaymentMethodCode = 1
 
     sale_request = Gateway::CreateSaleRequest.new
     sale_request.CreditCardTransactionCollection << credit_card_transaction
@@ -728,6 +733,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.SecurityCode = '123'
     credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
     credit_card_transaction.AmountInCents = 100
+    credit_card_transaction.Options.PaymentMethodCode = 1
 
     sale_request = Gateway::CreateSaleRequest.new
     sale_request.Buyer.Name = 'Anakin Skywalker'
@@ -757,6 +763,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.SecurityCode = '123'
     credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
     credit_card_transaction.AmountInCents = 100
+    credit_card_transaction.Options.PaymentMethodCode = 1
 
     sale_request = Gateway::CreateSaleRequest.new
     sale_request.Buyer.Name = 'Anakin Skywalker'
@@ -899,6 +906,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.SecurityCode = '123'
     credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
     credit_card_transaction.AmountInCents = 100
+    credit_card_transaction.Options.PaymentMethodCode = 1
 
     sale_request = Gateway::CreateSaleRequest.new
     sale_request.Buyer.Name = 'Anakin Skywalker'
@@ -930,8 +938,9 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.ExpMonth = 10
     credit_card_transaction.CreditCard.ExpYear = 2018
     credit_card_transaction.CreditCard.SecurityCode = '123'
-    credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
+    credit_card_transaction.CreditCard.HolderName = 'Trainspotting'
     credit_card_transaction.AmountInCents = 100
+    credit_card_transaction.Options.PaymentMethodCode = 1
 
     sale_request = Gateway::CreateSaleRequest.new
     sale_request.CreditCardTransactionCollection << credit_card_transaction
@@ -946,6 +955,7 @@ RSpec.describe Gateway do
     creditCardTransaction = Gateway::CreditCardTransaction.new
     creditCardTransaction.AmountInCents = 100
     creditCardTransaction.CreditCard.InstantBuyKey = instant_buy_key
+    creditCardTransaction.Options.PaymentMethodCode = 1
 
     # cria a transacao
     createSaleRequest = Gateway::CreateSaleRequest.new
@@ -966,6 +976,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.SecurityCode = '123'
     credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
     credit_card_transaction.AmountInCents = 100
+    credit_card_transaction.Options.PaymentMethodCode = 1
 
     sale_request = Gateway::CreateSaleRequest.new
     sale_request.Buyer.Name = 'Anakin Skywalker'
