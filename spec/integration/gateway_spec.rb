@@ -705,7 +705,7 @@ RSpec.describe Gateway do
     credit_card_transaction.CreditCard.ExpMonth = 10
     credit_card_transaction.CreditCard.ExpYear = 2018
     credit_card_transaction.CreditCard.SecurityCode = '123'
-    credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker'
+    credit_card_transaction.CreditCard.HolderName = 'Luke Skywalker' + DateTime.now().to_s
     credit_card_transaction.AmountInCents = 100
     credit_card_transaction.Options.PaymentMethodCode = 1
 
